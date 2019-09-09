@@ -21,7 +21,9 @@ namespace MSDNTest
             listOfAdmin = new ObservableCollection<User>();
 
             listBox.ItemsSource = listOfUsers;
-            adminListBox.ItemsSource = listOfAdmin; 
+            adminListBox.ItemsSource = listOfAdmin;
+
+            listBox.SelectionChanged += ListBox_SelectionChanged;
 
             button.Click += (s, e) =>
             {
@@ -30,11 +32,18 @@ namespace MSDNTest
             };
         }
 
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EmailLabelUser();
+        }
+
         private static ObservableCollection<User> _listOfUsers;
         public ObservableCollection<User> listOfUsers
         {
             get { return _listOfUsers; }
             set { _listOfUsers = value; }
+
+
         }
 
         private static ObservableCollection<User> _listOfAdmin;
@@ -45,7 +54,7 @@ namespace MSDNTest
             set { _listOfAdmin = value; }
         }
 
-        private void delete(object sender, RoutedEventArgs e)
+        private void Delete(object sender, RoutedEventArgs e)
         {
             var currentUser = ((User)listBox.SelectedItem);
             listOfUsers.Remove(currentUser);
@@ -63,8 +72,11 @@ namespace MSDNTest
         {
             var currentUser = ((User)listBox.SelectedItem);
 
-            listOfAdmin.Add(currentUser); 
-        
+            listOfAdmin.Add(currentUser);
+
+            var deleteCurrentUser = ((User)listBox.SelectedItem);
+            listOfUsers.Remove(deleteCurrentUser);
+
         }
 
         private void DeleteAdmin(object sender, RoutedEventArgs e)
@@ -72,6 +84,32 @@ namespace MSDNTest
             var currentUser = ((User)listBox.SelectedItem);
 
             listOfAdmin.Remove(currentUser);
+
         }
+
+        private void MakeAdminUser(object sender, RoutedEventArgs e)
+        {
+            var currentUser = ((User)adminListBox.SelectedItem);
+
+            listOfUsers.Add(currentUser);
+
+            var deleteCurrentUser = ((User)adminListBox.SelectedItem);
+            listOfAdmin.Remove(deleteCurrentUser);
+        }
+
+        private void EmailLabelUser()
+        {
+
+            var content = (listBox.SelectedItem as User).email;
+
+            if (content != null)
+            {
+                userEmailLabel.Content = content;
+            }
+        }
+        
+
+
+
     }
 }
